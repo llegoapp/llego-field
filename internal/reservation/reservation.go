@@ -21,6 +21,14 @@ func New(fieldId, bookerId int, startTime, endTime time.Time) Reservation {
 	}
 }
 
+func (r *Reservation) SetDefaultDetails() {
+	d := ReservationDetails{
+		Status:        StatusPending,
+		PaymentStatus: PaymentPending,
+	}
+	r.Details = &d
+}
+
 /* ReservationDetails holds details about a field reservation.*/
 type ReservationDetails struct {
 	Status        ReservationStatus
