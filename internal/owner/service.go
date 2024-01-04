@@ -1,16 +1,16 @@
 package owner
 
-type OwnerService struct {
-	repo OwnerRepository
+type Service struct {
+	repo Repository
 }
 
-func NewOwnerService(repo OwnerRepository) OwnerService {
-	return OwnerService{
+func NewOwnerService(repo Repository) Service {
+	return Service{
 		repo,
 	}
 }
 
-func (s *OwnerService) UpdateOwner(o Owner) error {
+func (s *Service) UpdateOwner(o Owner) error {
 	//TODO: check if the owner is the ower, use a bearer token to check the id
 	owner, err := s.repo.GetOwner(o.Id)
 	if err != nil {
@@ -27,6 +27,6 @@ func (s *OwnerService) UpdateOwner(o Owner) error {
 
 }
 
-func (s *OwnerService) GetOwner(id int) (Owner, error) {
+func (s *Service) GetOwner(id int) (Owner, error) {
 	return s.repo.GetOwner(id)
 }

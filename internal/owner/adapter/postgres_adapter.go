@@ -11,7 +11,7 @@ type OwnerRepositoryDB struct {
 	db *sql.DB
 }
 
-func NewOwnerRepositoryDB(db *sql.DB) owner.OwnerRepository {
+func NewOwnerRepositoryDB(db *sql.DB) owner.Repository {
 	return &OwnerRepositoryDB{
 		db: db,
 	}

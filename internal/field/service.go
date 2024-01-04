@@ -3,10 +3,10 @@ package field
 import "time"
 
 type FieldService struct {
-	repo FieldRepository
+	repo Repository
 }
 
-func NewFieldService(repo FieldRepository) FieldService {
+func NewFieldService(repo Repository) FieldService {
 	return FieldService{
 		repo,
 	}

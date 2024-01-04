@@ -12,7 +12,7 @@ type FieldRepositoryDB struct {
 	db *sql.DB
 }
 
-func NewFieldRepositoryDB(conn *sql.DB) field.FieldRepository {
+func NewFieldRepositoryDB(conn *sql.DB) field.Repository {
 	return &FieldRepositoryDB{
 		conn,
 	}

@@ -1,6 +1,6 @@
 package reservation
 
-type ReservationRepository interface {
+type Repository interface {
 	CreateReservation(r Reservation) error
 	GetReservation(id int) (Reservation, error)
 	UpdateReservation(r Reservation) error

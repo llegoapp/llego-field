@@ -2,8 +2,8 @@ package field
 
 import "time"
 
-/* FieldRepository defines the interface for CRUD operations on Field entities.*/
-type FieldRepository interface {
+/* Repository defines the interface for CRUD operations on Field entities.*/
+type Repository interface {
 	CreateField(field Field) error
 
 	GetField(id int) (Field, error)

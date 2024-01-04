@@ -7,17 +7,17 @@ import (
 	"github.com/gofiber/fiber/v2"
 )
 
-type FieldHandler struct {
+type Handler struct {
 	service FieldService
 }
 
-func NewFieldHandler(s FieldService) *FieldHandler {
-	return &FieldHandler{
+func NewFieldHandler(s FieldService) *Handler {
+	return &Handler{
 		s,
 	}
 }
 
-func (h *FieldHandler) GetField(c *fiber.Ctx) error {
+func (h *Handler) GetField(c *fiber.Ctx) error {
 	id, err := strconv.Atoi(c.Params("id"))
 	if err != nil {
 		return apperror.NewBadRequestError("invalid field id")
@@ -29,7 +29,7 @@ func (h *FieldHandler) GetField(c *fiber.Ctx) error {
 	return c.JSON(field)
 }
 
-func (h *FieldHandler) ListFields(c *fiber.Ctx) error {
+func (h *Handler) ListFields(c *fiber.Ctx) error {
 	page, err := strconv.Atoi(c.Query("page", "1"))
 	if err != nil {
 		return apperror.NewBadRequestError("invalid page number")
@@ -48,7 +48,7 @@ func (h *FieldHandler) ListFields(c *fiber.Ctx) error {
 	})
 }
 
-func (h *FieldHandler) ListFieldsByOwnerId(c *fiber.Ctx) error {
+func (h *Handler) ListFieldsByOwnerId(c *fiber.Ctx) error {
 	ownerId, err := strconv.Atoi(c.Params("ownerId"))
 	if err != nil {
 		return apperror.NewBadRequestError("invalid owner id")

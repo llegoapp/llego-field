@@ -47,7 +47,7 @@ func main() {
 
 }
 
-func ConfigRoutes(app *fiber.App, r *reservation.ReservationHandler, f *field.FieldHandler, o *owner.OwnerHandler) {
+func ConfigRoutes(app *fiber.App, r *reservation.Handler, f *field.Handler, o *owner.Handler) {
 	api := app.Group("/api/v1")
 	reservations := api.Group("/reservations")
 	reservations.Post("/", auth.JWTProtected(), r.CreateReservation)

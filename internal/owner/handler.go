@@ -7,17 +7,17 @@ import (
 	"github.com/gofiber/fiber/v2"
 )
 
-type OwnerHandler struct {
-	service OwnerService
+type Handler struct {
+	service Service
 }
 
-func NewOwnerHandler(s OwnerService) *OwnerHandler {
-	return &OwnerHandler{
+func NewOwnerHandler(s Service) *Handler {
+	return &Handler{
 		s,
 	}
 }
 
-func (h *OwnerHandler) GetOwner(c *fiber.Ctx) error {
+func (h *Handler) GetOwner(c *fiber.Ctx) error {
 	id, err := strconv.Atoi(c.Params("id"))
 	if err != nil {
 		return apperror.NewBadRequestError("invalid owner id")

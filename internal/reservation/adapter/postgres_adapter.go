@@ -11,7 +11,7 @@ type ReservationRepositoryDB struct {
 	db *sql.DB
 }
 
-func NewReservationRepositoryDB(db *sql.DB) reservation.ReservationRepository {
+func NewReservationRepositoryDB(db *sql.DB) reservation.Repository {
 	return &ReservationRepositoryDB{
 		db: db,
 	}
