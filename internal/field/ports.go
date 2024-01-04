@@ -14,7 +14,7 @@ type FieldRepository interface {
 
 	ListFields(page, pageSize int) ([]*Field, int, error)
 
-	ListFieldsByUserId(id int) ([]*Field, error)
+	ListFieldsByOwnerId(id int) ([]*Field, error)
 
 	ListAvailableFields(startTime, endTime time.Time, page, pageSize int) ([]*Field, int, error)
 

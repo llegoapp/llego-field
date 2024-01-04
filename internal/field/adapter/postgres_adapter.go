@@ -83,7 +83,7 @@ func (repo *FieldRepositoryDB) ListFields(page, pageSize int) ([]*field.Field, i
 	return fields, totalCount, nil
 }
 
-func (repo *FieldRepositoryDB) ListFieldsByUserId(id int) ([]*field.Field, error) {
+func (repo *FieldRepositoryDB) ListFieldsByOwnerId(id int) ([]*field.Field, error) {
 	query := `SELECT id, owner_id, street, city, country, status, open_time, close_time FROM fields WHERE owner_id = $1`
 	rows, err := repo.db.Query(query, id)
 	if err != nil {

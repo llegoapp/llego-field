@@ -29,8 +29,8 @@ func (s *FieldService) ListFields(page, pageSize int) ([]*Field, int, error) {
 	return s.repo.ListFields(page, pageSize)
 }
 
-func (s *FieldService) ListFieldsByUserId(id int) ([]*Field, error) {
-	return s.repo.ListFieldsByUserId(id)
+func (s *FieldService) ListFieldsByOwnerId(id int) ([]*Field, error) {
+	return s.repo.ListFieldsByOwnerId(id)
 }
 
 func (s *FieldService) ListAvailableFields(startTime, endTime time.Time, page, pageSize int) ([]*Field, int, error) {
