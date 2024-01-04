@@ -18,8 +18,6 @@ func NewReservationRepositoryDB(db *sql.DB) reservation.ReservationRepository {
 }
 
 func (repo *ReservationRepositoryDB) CreateReservation(r reservation.Reservation) error {
-	// Check if the field is available for reservation
-
 	query := `INSERT INTO reservations (field_id, booker_id, start_time, end_time, status,payment_status,payment_id) VALUES ($1, $2, $3, $4, $5, $6 ,$7)`
 	_, err := repo.db.Exec(query, r.FieldId, r.BookerId, r.StartTime, r.EndTime, r.Details.Status, r.Details.PaymentStatus, r.Details.PaymentID)
 	if err != nil {
