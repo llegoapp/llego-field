@@ -30,6 +30,32 @@ func (o *Owner) Validate() error {
 	return nil
 }
 
+func (o *Owner) Update(new Owner) error {
+	// Validate the new owner data
+	if err := new.Validate(); err != nil {
+		return err
+	}
+
+	if new.Name != "" {
+		o.Name = new.Name
+	}
+
+	if new.Password != "" {
+		o.Password = new.Password
+	}
+
+	if new.PhoneNumber.CountryCode != "" || new.PhoneNumber.Number != "" {
+		if new.PhoneNumber.CountryCode != "" {
+			o.PhoneNumber.CountryCode = new.PhoneNumber.CountryCode
+		}
+		if new.PhoneNumber.Number != "" {
+			o.PhoneNumber.Number = new.PhoneNumber.Number
+		}
+	}
+
+	return nil
+}
+
 type PhoneNumber struct {
 	CountryCode string
 	Number      string
