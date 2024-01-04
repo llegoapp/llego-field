@@ -18,6 +18,8 @@ func (s *ReservationService) CreateReservation(r Reservation) error {
 	if _, err := s.field_service.CheckFieldAvailability(r.FieldId, r.StartTime, r.EndTime); err != nil {
 		return err
 	}
+	r.Details.Status = "pending"
+
 	return s.repo.CreateReservation(r)
 }
 
