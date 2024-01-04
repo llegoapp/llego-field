@@ -1,5 +1,7 @@
 package field
 
+import "time"
+
 /* FieldRepository defines the interface for CRUD operations on Field entities.*/
 type FieldRepository interface {
 	CreateField(field Field) error
@@ -13,4 +15,6 @@ type FieldRepository interface {
 	ListFields(page, pageSize int) ([]*Field, int, error)
 
 	ListFieldsByUserId(id int) ([]*Field, error)
+
+	ListAvailableFields(startTime, endTime time.Time) ([]*Field, error)
 }

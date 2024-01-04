@@ -1,5 +1,7 @@
 package field
 
+import "time"
+
 type FieldService struct {
 	repo FieldRepository
 }
@@ -29,4 +31,8 @@ func (s *FieldService) ListFields(page, pageSize int) ([]*Field, int, error) {
 
 func (s *FieldService) ListFieldsByUserId(id int) ([]*Field, error) {
 	return s.repo.ListFieldsByUserId(id)
+}
+
+func (s *FieldService) ListAvailableFields(startTime, endTime time.Time) ([]*Field, error) {
+	return s.repo.ListAvailableFields(startTime, endTime)
 }
