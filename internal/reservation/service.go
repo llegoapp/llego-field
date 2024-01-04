@@ -26,10 +26,10 @@ func (s *ReservationService) ListReservation(page, pageSize int) ([]*Reservation
 	return s.repo.ListReservation(page, pageSize)
 }
 
-func (s *ReservationService) ListReservationByBookerId(id int) ([]*Reservation, int, error) {
-	return s.repo.ListReservationByBookerId(id)
+func (s *ReservationService) ListReservationByBookerId(bookerId int, page, pageSize int) ([]*Reservation, int, error) {
+	return s.repo.ListReservationByBookerId(bookerId, page, pageSize)
 }
 
-func (s *ReservationService) ListReservationByFieldId(id int) ([]*Reservation, int, error) {
-	return s.repo.ListReservationByFieldId(id)
+func (s *ReservationService) ListReservationByFieldId(fieldId int, page, pageSize int) ([]*Reservation, int, error) {
+	return s.repo.ListReservationByFieldId(fieldId, page, pageSize)
 }
