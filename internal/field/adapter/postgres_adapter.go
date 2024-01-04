@@ -104,7 +104,13 @@ func (repo *FieldRepositoryDB) ListFieldsByUserId(id int) ([]*field.Field, error
 	return fields, nil
 }
 
-func (repo *FieldRepositoryDB) ListAvailableFields(startTime, endTime time.Time) ([]*field.Field, error) {
+func (repo *FieldRepositoryDB) ListAvailableFields(startTime, endTime time.Time, page, pageSize int) ([]*field.Field, int, error) {
+	// Adjust page number and set offset for SQL query
+	if page <= 0 {
+		page = 1
+	}
+	offset := (page - 1) * pageSize
+
 	query := `
     SELECT f.id, f.owner_id, f.street, f.city, f.country, f.status, f.open_time, f.close_time 
     FROM fields f
@@ -117,23 +123,45 @@ func (repo *FieldRepositoryDB) ListAvailableFields(startTime, endTime time.Time)
     )
     AND f.open_time <= $1
     AND f.close_time >= $2
+    LIMIT $3 OFFSET $4
     `
 
-	rows, err := repo.db.Query(query, startTime, endTime)
+	rows, err := repo.db.Query(query, startTime, endTime, pageSize, offset)
 	if err != nil {
-		return nil, apperror.NewInternalError(fmt.Sprintf("error listing fields: %v", err))
+		return nil, 0, apperror.NewInternalError(fmt.Sprintf("error listing available fields: %v", err))
 	}
 	defer rows.Close()
 
-	var f []*field.Field
+	var fields []*field.Field
 	for rows.Next() {
 		var field field.Field
 		if err := rows.Scan(&field.Id, &field.OwnerId, &field.Location.Street, &field.Location.City,
 			&field.Location.Country, &field.Status, &field.OpenTime, &field.CloseTime); err != nil {
-			return nil, apperror.NewInternalError(fmt.Sprintf("error scanning field: %v", err))
+			return nil, 0, apperror.NewInternalError(fmt.Sprintf("error scanning field: %v", err))
 		}
-		f = append(f, &field)
+		fields = append(fields, &field)
 	}
 
-	return f, nil
+	// Count total available fields for pagination
+	countQuery := `
+    SELECT COUNT(*) 
+    FROM fields f
+    WHERE NOT EXISTS (
+        SELECT 1
+        FROM reservations r
+        WHERE r.field_id = f.id
+        AND r.start_time < $2
+        AND r.end_time > $1
+    )
+    AND f.open_time <= $1
+    AND f.close_time >= $2
+    `
+
+	var totalCount int
+	err = repo.db.QueryRow(countQuery, startTime, endTime).Scan(&totalCount)
+	if err != nil {
+		return nil, 0, apperror.NewInternalError(fmt.Sprintf("error counting available fields: %v", err))
+	}
+
+	return fields, totalCount, nil
 }

@@ -33,6 +33,6 @@ func (s *FieldService) ListFieldsByUserId(id int) ([]*Field, error) {
 	return s.repo.ListFieldsByUserId(id)
 }
 
-func (s *FieldService) ListAvailableFields(startTime, endTime time.Time) ([]*Field, error) {
-	return s.repo.ListAvailableFields(startTime, endTime)
+func (s *FieldService) ListAvailableFields(startTime, endTime time.Time, page, pageSize int) ([]*Field, int, error) {
+	return s.repo.ListAvailableFields(startTime, endTime, page, pageSize)
 }
