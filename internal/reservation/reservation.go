@@ -9,7 +9,7 @@ type Reservation struct {
 	StartTime time.Time // Start time of the reservation
 	EndTime   time.Time // End time of the reservation
 	// Duration can be calculated as EndTime.Sub(StartTime)
-	Reservation *ReservationDetails
+	Details *ReservationDetails
 }
 
 func New(fieldId, bookerId int, startTime, endTime time.Time) Reservation {
