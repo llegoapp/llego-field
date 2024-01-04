@@ -20,8 +20,14 @@ func (s *Service) UpdateOwner(o Owner) error {
 	if err = o.Validate(); err != nil {
 		return err
 	}
-	owner.Update(o)
-	s.repo.UpdateOwner(owner)
+	err = owner.Update(o)
+	if err != nil {
+		return err
+	}
+	err = s.repo.UpdateOwner(owner)
+	if err != nil {
+		return err
+	}
 
 	return nil
 
