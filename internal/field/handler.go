@@ -11,7 +11,7 @@ type FieldHandler struct {
 	service FieldService
 }
 
-func NewReservationHandler(s FieldService) *FieldHandler {
+func NewFieldHandler(s FieldService) *FieldHandler {
 	return &FieldHandler{
 		s,
 	}
