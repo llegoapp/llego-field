@@ -88,7 +88,7 @@ func (h *ReservationHandler) ListReservationByBookerId(c *fiber.Ctx) error {
 	})
 }
 
-func (h *ReservationHandler) LisReservationByFieldId(c *fiber.Ctx) error {
+func (h *ReservationHandler) ListReservationByFieldId(c *fiber.Ctx) error {
 	fieldId, err := strconv.Atoi(c.Params("id"))
 	if err != nil {
 		return apperror.NewBadRequestError("invalid field id")
