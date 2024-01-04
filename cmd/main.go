@@ -7,6 +7,7 @@ import (
 	ownerAdapter "fields/internal/owner/adapter"
 	"fields/internal/reservation"
 	reservationAdapter "fields/internal/reservation/adapter"
+	"fields/pkg/auth"
 	"fields/pkg/database"
 	"fmt"
 
@@ -47,10 +48,10 @@ func main() {
 func ConfigRoutes(app *fiber.App, r *reservation.ReservationHandler, f *field.FieldHandler, o *owner.OwnerHandler) {
 	api := app.Group("/api/v1")
 	reservations := api.Group("/reservations")
-	reservations.Post("/", r.CreateReservation)
+	reservations.Post("/", auth.JWTProtected(), r.CreateReservation)
 	reservations.Get("/:id", r.GetReservation)
 	reservations.Get("/", r.ListReservation)
-	reservations.Get("/booker/:bookerId", r.ListReservationByBookerId)
+	reservations.Get("/booker/:bookerId", auth.JWTProtected(), r.ListReservationByBookerId)
 	reservations.Get("/field/:fieldId", r.ListReservationByFieldId)
 
 	// Field routes
