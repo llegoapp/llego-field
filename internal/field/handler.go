@@ -8,10 +8,10 @@ import (
 )
 
 type Handler struct {
-	service FieldService
+	service Service
 }
 
-func NewFieldHandler(s FieldService) *Handler {
+func NewFieldHandler(s Service) *Handler {
 	return &Handler{
 		s,
 	}

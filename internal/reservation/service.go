@@ -4,10 +4,10 @@ import "fields/internal/field"
 
 type Service struct {
 	repo          Repository
-	field_service field.FieldService
+	field_service field.Service
 }
 
-func NewReservationService(repo Repository, field_service field.FieldService) Service {
+func NewReservationService(repo Repository, field_service field.Service) Service {
 	return Service{
 		repo,
 		field_service,
