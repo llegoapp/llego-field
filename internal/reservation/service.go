@@ -27,7 +27,15 @@ func (s *ReservationService) GetReservation(id int) (Reservation, error) {
 	return s.repo.GetReservation(id)
 }
 
-func (s *ReservationService) UpdateReservation(r Reservation) error {
+func (s *ReservationService) CancelReservation(reservationId int) error {
+	//TODO: Add logic of who can cancell , and the rules, before canceling
+	r, err := s.GetReservation(reservationId)
+	if err != nil {
+		return err
+	}
+
+	r.Details.Status = "cancelled"
+
 	return s.repo.UpdateReservation(r)
 }
 
