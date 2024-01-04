@@ -36,3 +36,7 @@ func (s *FieldService) ListFieldsByUserId(id int) ([]*Field, error) {
 func (s *FieldService) ListAvailableFields(startTime, endTime time.Time, page, pageSize int) ([]*Field, int, error) {
 	return s.repo.ListAvailableFields(startTime, endTime, page, pageSize)
 }
+
+func (s *FieldService) CheckFieldAvailability(fieldId int, startTime, endTime time.Time) (bool, error) {
+	return s.repo.CheckFieldAvailability(fieldId, startTime, endTime)
+}

@@ -54,3 +54,7 @@ const (
 	StatusClosed      FieldStatus = "closed"
 	StatusMaintenance FieldStatus = "maintenance"
 )
+
+func (f FieldStatus) IsAvalible() bool {
+	return f == StatusAvailable
+}

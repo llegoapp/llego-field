@@ -165,3 +165,52 @@ func (repo *FieldRepositoryDB) ListAvailableFields(startTime, endTime time.Time,
 
 	return fields, totalCount, nil
 }
+
+func (repo *FieldRepositoryDB) CheckFieldAvailability(fieldId int, startTime, endTime time.Time) (bool, error) {
+
+	// Check if the field is in status 'available'
+	statusQuery := `
+    SELECT status FROM fields WHERE id = $1`
+	var currentStatus field.FieldStatus
+	err := repo.db.QueryRow(statusQuery, fieldId).Scan(&currentStatus)
+	if err != nil {
+		return false, apperror.NewInternalError(fmt.Sprintf("error checking field status: %v", err))
+	}
+	if currentStatus.IsAvalible() {
+		return false, apperror.NewBadRequestError("field is not available")
+	}
+
+	reservationQuery := `
+    SELECT EXISTS (
+        SELECT 1 FROM reservations 
+        WHERE field_id = $1 
+        AND start_time < $3 
+        AND end_time > $2
+    )`
+	var isReserved bool
+	err = repo.db.QueryRow(reservationQuery, fieldId, startTime, endTime).Scan(&isReserved)
+	if err != nil {
+		return false, apperror.NewInternalError(fmt.Sprintf("error checking reservation availability: %v", err))
+	}
+	if isReserved {
+		return false, apperror.NewBadRequestError("field is not available for the specified time")
+	}
+	// Query to check if the reservation time is within the field's open and close times
+	fieldTimeQuery := `
+    SELECT EXISTS (
+        SELECT 1 FROM fields 
+        WHERE id = $1 
+        AND open_time <= $2 
+        AND close_time >= $3
+    )`
+	var isOpenForReservation bool
+	err = repo.db.QueryRow(fieldTimeQuery, fieldId, startTime, endTime).Scan(&isOpenForReservation)
+	if err != nil {
+		return false, apperror.NewInternalError(fmt.Sprintf("error checking field open times: %v", err))
+	}
+	if !isOpenForReservation {
+		return false, apperror.NewBadRequestError("field is not open for reservation during the specified time")
+	}
+
+	return true, nil
+}
