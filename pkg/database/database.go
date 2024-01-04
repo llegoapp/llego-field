@@ -5,13 +5,16 @@ import (
 	"fmt"
 	"os"
 
+	"github.com/golang-migrate/migrate/v4"
+	"github.com/golang-migrate/migrate/v4/database/postgres"
+	_ "github.com/golang-migrate/migrate/v4/source/file"
 	_ "github.com/jackc/pgx/v4/stdlib"
 )
 
 var dbPool *sql.DB
 
-// InitPool initializes the database connection pool.
-func InitPool() error {
+// InitPool initializes the database connection pool and runs migrations.
+func InitPool(migrationsPath string) error {
 	var err error
 
 	// Construct the database connection string
@@ -33,6 +36,33 @@ func InitPool() error {
 	// Verify the connection
 	if err = dbPool.Ping(); err != nil {
 		return fmt.Errorf("error pinging database: %v", err)
+	}
+
+	// Run migrations
+	if err = runMigrations(dbPool, migrationsPath); err != nil {
+		return fmt.Errorf("error running migrations: %v", err)
+	}
+
+	return nil
+}
+
+func runMigrations(db *sql.DB, migrationsPath string) error {
+	driver, err := postgres.WithInstance(db, &postgres.Config{})
+	if err != nil {
+		return err
+	}
+
+	m, err := migrate.NewWithDatabaseInstance(
+		fmt.Sprintf("file://%s", migrationsPath),
+		"postgres",
+		driver,
+	)
+	if err != nil {
+		return err
+	}
+
+	if err := m.Up(); err != nil && err != migrate.ErrNoChange {
+		return err
 	}
 
 	return nil
