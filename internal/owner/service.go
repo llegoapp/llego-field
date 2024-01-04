@@ -4,7 +4,7 @@ type OwnerService struct {
 	repo OwnerRepository
 }
 
-func NewOwenerService(repo OwnerRepository) OwnerService {
+func NewOwnerService(repo OwnerRepository) OwnerService {
 	return OwnerService{
 		repo,
 	}
