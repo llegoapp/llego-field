@@ -1,16 +1,23 @@
 package reservation
 
+import "fields/internal/field"
+
 type ReservationService struct {
-	repo ReservationRepository
+	repo          ReservationRepository
+	field_service field.FieldService
 }
 
-func NewReservationService(repo ReservationRepository) ReservationService {
+func NewReservationService(repo ReservationRepository, field_service field.FieldService) ReservationService {
 	return ReservationService{
 		repo,
+		field_service,
 	}
 }
 
 func (s *ReservationService) CreateReservation(r Reservation) error {
+	if _, err := s.field_service.CheckFieldAvailability(r.FieldId, r.StartTime, r.EndTime); err != nil {
+		return err
+	}
 	return s.repo.CreateReservation(r)
 }
 

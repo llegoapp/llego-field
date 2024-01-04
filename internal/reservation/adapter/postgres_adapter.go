@@ -5,7 +5,6 @@ import (
 	"fields/internal/reservation"
 	"fields/pkg/apperror"
 	"fmt"
-	"time"
 )
 
 type ReservationRepositoryDB struct {
@@ -20,55 +19,12 @@ func NewReservationRepositoryDB(db *sql.DB) reservation.ReservationRepository {
 
 func (repo *ReservationRepositoryDB) CreateReservation(r reservation.Reservation) error {
 	// Check if the field is available for reservation
-	if err := repo.checkFieldAvailability(r.FieldId, r.StartTime, r.EndTime); err != nil {
-		return err
-	}
 
 	query := `INSERT INTO reservations (field_id, booker_id, start_time, end_time, status,payment_status,payment_id) VALUES ($1, $2, $3, $4, $5, $6 ,$7)`
 	_, err := repo.db.Exec(query, r.FieldId, r.BookerId, r.StartTime, r.EndTime, r.Details.Status, r.Details.PaymentStatus, r.Details.PaymentID)
 	if err != nil {
 		return apperror.NewInternalError(fmt.Sprintf("error creating reservation: %v", err))
 	}
-	return nil
-}
-
-// checkFieldAvailability checks if the field is available for the given time period
-// TODO: this should be in the reservation service with the fild service for be buisiness logic
-func (repo *ReservationRepositoryDB) checkFieldAvailability(fieldId int, startTime, endTime time.Time) error {
-	// Query to check if the field is already reserved during the given time
-	reservationQuery := `
-    SELECT EXISTS (
-        SELECT 1 FROM reservations 
-        WHERE field_id = $1 
-        AND start_time < $3 
-        AND end_time > $2
-    )`
-	var isReserved bool
-	err := repo.db.QueryRow(reservationQuery, fieldId, startTime, endTime).Scan(&isReserved)
-	if err != nil {
-		return apperror.NewInternalError(fmt.Sprintf("error checking reservation availability: %v", err))
-	}
-	if isReserved {
-		return apperror.NewBadRequestError("field is not available for the specified time")
-	}
-
-	// Query to check if the reservation time is within the field's open and close times
-	fieldTimeQuery := `
-    SELECT EXISTS (
-        SELECT 1 FROM fields 
-        WHERE id = $1 
-        AND open_time <= $2 
-        AND close_time >= $3
-    )`
-	var isOpenForReservation bool
-	err = repo.db.QueryRow(fieldTimeQuery, fieldId, startTime, endTime).Scan(&isOpenForReservation)
-	if err != nil {
-		return apperror.NewInternalError(fmt.Sprintf("error checking field open times: %v", err))
-	}
-	if !isOpenForReservation {
-		return apperror.NewBadRequestError("field is not open for reservation during the specified time")
-	}
-
 	return nil
 }
 
