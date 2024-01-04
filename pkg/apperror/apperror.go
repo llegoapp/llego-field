@@ -42,6 +42,10 @@ func NewForbiddenError(message string) *AppError {
 	return NewAppError(403, message)
 }
 
+func NewValidationError(message string) *AppError {
+	return NewAppError(422, message)
+}
+
 // ErrorHandler is a middleware that converts AppError to fiber.Error.
 func ErrorHandler(ctx *fiber.Ctx, err error) error {
 	// Convert error to fiber.Error
