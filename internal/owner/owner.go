@@ -23,7 +23,7 @@ func New(id int, name, password string) (*Owner, error) {
 	}, nil
 }
 
-func (o *Owner) Vaildate() error {
+func (o *Owner) Validate() error {
 	if err := o.Name.Validate(); err != nil {
 		return err
 	}
