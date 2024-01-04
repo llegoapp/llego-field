@@ -47,16 +47,24 @@ func NewValidationError(message string) *AppError {
 }
 
 // ErrorHandler is a middleware that converts AppError to fiber.Error.
-func ErrorHandler(ctx *fiber.Ctx, err error) error {
-	// Convert error to fiber.Error
-	var fiberErr *fiber.Error
-	if e, ok := err.(*AppError); ok {
-		fiberErr = fiber.NewError(e.Code, e.Message)
-	} else {
-		// Default to 500 internal server error
-		fiberErr = fiber.NewError(fiber.StatusInternalServerError, err.Error())
+func ErrorHandler(c *fiber.Ctx) error {
+	// Try to execute the next middleware/handler
+	err := c.Next()
+
+	// Check if there was an error
+	if err != nil {
+		// Log the error, handle it, or send a custom response
+		var fiberErr *fiber.Error
+		if e, ok := err.(*AppError); ok {
+			fiberErr = fiber.NewError(e.Code, e.Message)
+		} else {
+			fiberErr = fiber.NewError(fiber.StatusInternalServerError, err.Error())
+		}
+
+		// Return the error to the client
+		return c.Status(fiberErr.Code).SendString(fiberErr.Message)
 	}
 
-	// Send the error response
-	return ctx.Status(fiberErr.Code).SendString(fiberErr.Message)
+	// If no error, continue the chain
+	return nil
 }
