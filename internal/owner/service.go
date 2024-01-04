@@ -10,7 +10,7 @@ func NewOwenerService(repo OwnerRepository) OwnerService {
 	}
 }
 
-func (s OwnerService) UpdateOwner(o Owner) error {
+func (s *OwnerService) UpdateOwner(o Owner) error {
 	//TODO: check if the owner is the ower, use a bearer token to check the id
 	owner, err := s.repo.GetOwner(o.Id)
 	if err != nil {
@@ -25,4 +25,8 @@ func (s OwnerService) UpdateOwner(o Owner) error {
 
 	return nil
 
+}
+
+func (s *OwnerService) GetOwner(id int) (Owner, error) {
+	return s.repo.GetOwner(id)
 }
