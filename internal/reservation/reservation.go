@@ -24,7 +24,7 @@ func New(fieldId, bookerId int, startTime, endTime time.Time) Reservation {
 /* ReservationDetails holds details about a field reservation.*/
 type ReservationDetails struct {
 	Status        ReservationStatus
-	PaymentStatus *PaymentStatus
+	PaymentStatus PaymentStatus
 	PaymentID     string
 }
 
