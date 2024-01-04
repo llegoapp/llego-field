@@ -1,0 +1,1 @@
+ALTER TABLE owners ADD COLUMN password TEXT NOT NULL;
