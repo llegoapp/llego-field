@@ -7,6 +7,7 @@ import (
 	ownerAdapter "fields/internal/owner/adapter"
 	"fields/internal/reservation"
 	reservationAdapter "fields/internal/reservation/adapter"
+	"fields/pkg/apperror"
 	"fields/pkg/auth"
 	"fields/pkg/database"
 	"fmt"
@@ -27,6 +28,7 @@ func main() {
 	fmt.Println("Database initialized")
 
 	app := fiber.New()
+	app.Use(apperror.ErrorHandler)
 	fieldRepo := fieldAdapter.NewFieldRepositoryDB(database.GetPool())
 	ownerRepo := ownerAdapter.NewOwnerRepositoryDB(database.GetPool())
 	resvRepo := reservationAdapter.NewReservationRepositoryDB(database.GetPool())
