@@ -13,13 +13,21 @@ COPY . .
 
 # Build the Go app.
 # Compile the binary statically for compatibility with the scratch image.
-RUN CGO_ENABLED=0 GOOS=linux go build -a -installsuffix cgo -o main .
+# Make sure to specify the path to the directory containing your main.go
+RUN CGO_ENABLED=0 GOOS=linux go build -a -installsuffix cgo -o main ./cmd/main.go
 
 # Use a minimal runtime image.
 FROM alpine:latest  
 
-# Add CA certificates for HTTPS connections.
-RUN apk --no-cache add ca-certificates
+# Add CA certificates and other dependencies including Dockerize
+RUN apk update && apk add --no-cache ca-certificates bash wget \
+    && update-ca-certificates
+
+# Install Dockerize
+ENV DOCKERIZE_VERSION v0.6.1
+RUN wget https://github.com/jwilder/dockerize/releases/download/$DOCKERIZE_VERSION/dockerize-alpine-linux-amd64-$DOCKERIZE_VERSION.tar.gz \
+    && tar -C /usr/local/bin -xzvf dockerize-alpine-linux-amd64-$DOCKERIZE_VERSION.tar.gz \
+    && rm dockerize-alpine-linux-amd64-$DOCKERIZE_VERSION.tar.gz
 
 # Copy the pre-built binary file from the previous stage.
 COPY --from=builder /app/main .

@@ -5,6 +5,9 @@ services:
     build: .
     ports:
       - "8080:8080"
+    volumes:
+      - .:/app
+      - ./migrations:/app/migrations # Map migrations directory
     depends_on:
       - db
     environment:
@@ -13,6 +16,13 @@ services:
       - DB_PASSWORD=mysecretpassword
       - DB_NAME=mydatabase
       - DB_PORT=5432
+    entrypoint:
+      - dockerize
+      - -timeout
+      - 60s
+      - -wait
+      - tcp://db:5432
+    command: ./main
 
   db:
     image: postgres:latest
