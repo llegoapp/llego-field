@@ -5,16 +5,16 @@ import "time"
 /* Field represents a soccer field with reservation details.*/
 type Field struct {
 	Id        int
-	ClientId  int
+	OwnerId   int
 	Location  Address
 	Status    FieldStatus
 	OpenTime  time.Time
 	CloseTime time.Time
 }
 
-func New(location Address, isReserved bool, clientId int, openTime time.Time, closeTime time.Time) *Field {
+func New(location Address, isReserved bool, ownerId int, openTime time.Time, closeTime time.Time) *Field {
 	return &Field{
-		ClientId:  clientId,
+		OwnerId:   ownerId,
 		Location:  location,
 		Status:    StatusAvailable,
 		OpenTime:  openTime,
