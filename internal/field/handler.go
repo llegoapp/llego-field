@@ -5,6 +5,7 @@ import (
 	"strconv"
 
 	"github.com/gofiber/fiber/v2"
+	"github.com/google/uuid"
 )
 
 type Handler struct {
@@ -18,7 +19,7 @@ func NewFieldHandler(s Service) *Handler {
 }
 
 func (h *Handler) GetField(c *fiber.Ctx) error {
-	id, err := strconv.Atoi(c.Params("id"))
+	id, err := uuid.Parse(c.Params("id"))
 	if err != nil {
 		return apperror.NewBadRequestError("invalid field id")
 	}
@@ -49,7 +50,7 @@ func (h *Handler) ListFields(c *fiber.Ctx) error {
 }
 
 func (h *Handler) ListFieldsByOwnerId(c *fiber.Ctx) error {
-	ownerId, err := strconv.Atoi(c.Params("ownerId"))
+	ownerId, err := uuid.Parse(c.Params("ownerId"))
 	if err != nil {
 		return apperror.NewBadRequestError("invalid owner id")
 	}

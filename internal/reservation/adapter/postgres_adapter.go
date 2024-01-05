@@ -5,6 +5,8 @@ import (
 	"fields/internal/reservation"
 	"fields/pkg/apperror"
 	"fmt"
+
+	"github.com/google/uuid"
 )
 
 type ReservationRepositoryDB struct {
@@ -26,7 +28,7 @@ func (repo *ReservationRepositoryDB) CreateReservation(r reservation.Reservation
 	return nil
 }
 
-func (repo *ReservationRepositoryDB) GetReservation(id int) (reservation.Reservation, error) {
+func (repo *ReservationRepositoryDB) GetReservation(id uuid.UUID) (reservation.Reservation, error) {
 	query := `SELECT id, field_id, booker_id, start_time, end_time, status, payment_status, payment_id FROM reservations WHERE id = $1`
 	var r reservation.Reservation
 	err := repo.db.QueryRow(query, id).Scan(&r.Id, &r.FieldId, &r.BookerId, &r.StartTime, &r.EndTime, &r.Details.Status, &r.Details.PaymentStatus, &r.Details.PaymentID)
@@ -85,7 +87,7 @@ func (repo *ReservationRepositoryDB) ListReservation(page, pageSize int) ([]*res
 	return reservations, totalCount, nil
 }
 
-func (repo *ReservationRepositoryDB) ListReservationByBookerId(bookerId int, page, pageSize int) ([]*reservation.Reservation, int, error) {
+func (repo *ReservationRepositoryDB) ListReservationByBookerId(bookerId uuid.UUID, page, pageSize int) ([]*reservation.Reservation, int, error) {
 	if page <= 0 {
 		page = 1
 	}

@@ -5,6 +5,8 @@ import (
 	"fields/internal/owner"
 	"fields/pkg/apperror"
 	"fmt"
+
+	"github.com/google/uuid"
 )
 
 type OwnerRepositoryDB struct {
@@ -17,7 +19,7 @@ func NewOwnerRepositoryDB(db *sql.DB) owner.Repository {
 	}
 }
 
-func (repo *OwnerRepositoryDB) GetOwner(id int) (owner.Owner, error) {
+func (repo *OwnerRepositoryDB) GetOwner(id uuid.UUID) (owner.Owner, error) {
 	query := `SELECT id, name, country_code, phone_number, password FROM owners WHERE id = $1`
 	var o owner.Owner
 	var phoneNumber owner.PhoneNumber

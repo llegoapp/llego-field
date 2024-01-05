@@ -1,23 +1,26 @@
 package owner
 
-import "fields/pkg/apperror"
-import "golang.org/x/crypto/bcrypt"
+import (
+	"fields/pkg/apperror"
+
+	"github.com/google/uuid"
+	"golang.org/x/crypto/bcrypt"
+)
 
 type Owner struct {
-	Id          int
+	Id          uuid.UUID
 	Password    Password
 	Name        Name
 	PhoneNumber PhoneNumber
 }
 
-func New(id int, name, password string) (*Owner, error) {
+func New(name, password string) (*Owner, error) {
 	hashedPassword, err := Password(password).Hash()
 	if err != nil {
 		return nil, err
 	}
 
 	return &Owner{
-		Id:       id,
 		Name:     Name(name),
 		Password: Password(hashedPassword),
 	}, nil

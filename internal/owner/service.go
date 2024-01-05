@@ -1,5 +1,7 @@
 package owner
 
+import "github.com/google/uuid"
+
 type Service struct {
 	repo Repository
 }
@@ -33,6 +35,6 @@ func (s *Service) UpdateOwner(o Owner) error {
 
 }
 
-func (s *Service) GetOwner(id int) (Owner, error) {
+func (s *Service) GetOwner(id uuid.UUID) (Owner, error) {
 	return s.repo.GetOwner(id)
 }

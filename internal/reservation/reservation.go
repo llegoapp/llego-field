@@ -1,18 +1,22 @@
 package reservation
 
-import "time"
+import (
+	"time"
+
+	"github.com/google/uuid"
+)
 
 type Reservation struct {
-	Id        int
-	FieldId   int
-	BookerId  int       // ID of the user who booked the reservation
+	Id        uuid.UUID
+	FieldId   uuid.UUID
+	BookerId  uuid.UUID // ID of the user who booked the reservation
 	StartTime time.Time // Start time of the reservation
 	EndTime   time.Time // End time of the reservation
 	// Duration can be calculated as EndTime.Sub(StartTime)
 	Details *ReservationDetails
 }
 
-func New(fieldId, bookerId int, startTime, endTime time.Time) Reservation {
+func New(fieldId, bookerId uuid.UUID, startTime, endTime time.Time) Reservation {
 	return Reservation{
 		FieldId:   fieldId,
 		BookerId:  bookerId,

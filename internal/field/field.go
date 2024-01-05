@@ -1,18 +1,22 @@
 package field
 
-import "time"
+import (
+	"time"
+
+	"github.com/google/uuid"
+)
 
 /* Field represents a soccer field with reservation details.*/
 type Field struct {
-	Id        int
-	OwnerId   int
+	Id        uuid.UUID
+	OwnerId   uuid.UUID
 	Location  Address
 	Status    FieldStatus
 	OpenTime  time.Time
 	CloseTime time.Time
 }
 
-func New(location Address, isReserved bool, ownerId int, openTime time.Time, closeTime time.Time) *Field {
+func New(location Address, isReserved bool, ownerId uuid.UUID, openTime time.Time, closeTime time.Time) *Field {
 	return &Field{
 		OwnerId:   ownerId,
 		Location:  location,

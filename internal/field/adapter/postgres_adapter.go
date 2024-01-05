@@ -6,6 +6,8 @@ import (
 	"fields/pkg/apperror"
 	"fmt"
 	"time"
+
+	"github.com/google/uuid"
 )
 
 type FieldRepositoryDB struct {
@@ -27,7 +29,7 @@ func (repo *FieldRepositoryDB) CreateField(f field.Field) error {
 
 }
 
-func (repo *FieldRepositoryDB) GetField(id int) (field.Field, error) {
+func (repo *FieldRepositoryDB) GetField(id uuid.UUID) (field.Field, error) {
 	query := `SELECT id, owner_id, street, city, country, status, open_time, close_time FROM fields WHERE id = $1`
 	var f field.Field
 
@@ -48,7 +50,7 @@ func (repo *FieldRepositoryDB) UpdateField(f field.Field) error {
 	return apperror.NewInternalError(fmt.Sprintf("error updating field: %v", err))
 }
 
-func (repo *FieldRepositoryDB) DeleteField(id int) error {
+func (repo *FieldRepositoryDB) DeleteField(id uuid.UUID) error {
 	query := `DELETE FROM fields WHERE id = $1`
 	_, err := repo.db.Exec(query, id)
 	return apperror.NewInternalError(fmt.Sprintf("error deleting field: %v", err))
@@ -83,7 +85,7 @@ func (repo *FieldRepositoryDB) ListFields(page, pageSize int) ([]*field.Field, i
 	return fields, totalCount, nil
 }
 
-func (repo *FieldRepositoryDB) ListFieldsByOwnerId(id int) ([]*field.Field, error) {
+func (repo *FieldRepositoryDB) ListFieldsByOwnerId(id uuid.UUID) ([]*field.Field, error) {
 	query := `SELECT id, owner_id, street, city, country, status, open_time, close_time FROM fields WHERE owner_id = $1`
 	rows, err := repo.db.Query(query, id)
 	if err != nil {
@@ -166,7 +168,7 @@ func (repo *FieldRepositoryDB) ListAvailableFields(startTime, endTime time.Time,
 	return fields, totalCount, nil
 }
 
-func (repo *FieldRepositoryDB) CheckFieldAvailability(fieldId int, startTime, endTime time.Time) (bool, error) {
+func (repo *FieldRepositoryDB) CheckFieldAvailability(fieldId uuid.UUID, startTime, endTime time.Time) (bool, error) {
 
 	// Check if the field is in status 'available'
 	statusQuery := `

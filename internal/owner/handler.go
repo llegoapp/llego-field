@@ -2,9 +2,9 @@ package owner
 
 import (
 	"fields/pkg/apperror"
-	"strconv"
 
 	"github.com/gofiber/fiber/v2"
+	"github.com/google/uuid"
 )
 
 type Handler struct {
@@ -18,7 +18,7 @@ func NewOwnerHandler(s Service) *Handler {
 }
 
 func (h *Handler) GetOwner(c *fiber.Ctx) error {
-	id, err := strconv.Atoi(c.Params("id"))
+	id, err := uuid.Parse(c.Params("id"))
 	if err != nil {
 		return apperror.NewBadRequestError("invalid owner id")
 	}

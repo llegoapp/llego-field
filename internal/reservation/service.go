@@ -1,6 +1,10 @@
 package reservation
 
-import "fields/internal/field"
+import (
+	"fields/internal/field"
+
+	"github.com/google/uuid"
+)
 
 type Service struct {
 	repo          Repository
@@ -24,11 +28,11 @@ func (s *Service) CreateReservation(r Reservation) error {
 	return s.repo.CreateReservation(r)
 }
 
-func (s *Service) GetReservation(id int) (Reservation, error) {
+func (s *Service) GetReservation(id uuid.UUID) (Reservation, error) {
 	return s.repo.GetReservation(id)
 }
 
-func (s *Service) CancelReservation(reservationId int) error {
+func (s *Service) CancelReservation(reservationId uuid.UUID) error {
 	//TODO: Add logic of who can cancell , and the rules, before canceling
 	r, err := s.GetReservation(reservationId)
 	if err != nil {
@@ -44,7 +48,7 @@ func (s *Service) ListReservation(page, pageSize int) ([]*Reservation, int, erro
 	return s.repo.ListReservation(page, pageSize)
 }
 
-func (s *Service) ListReservationByBookerId(bookerId int, page, pageSize int) ([]*Reservation, int, error) {
+func (s *Service) ListReservationByBookerId(bookerId uuid.UUID, page, pageSize int) ([]*Reservation, int, error) {
 	return s.repo.ListReservationByBookerId(bookerId, page, pageSize)
 }
 

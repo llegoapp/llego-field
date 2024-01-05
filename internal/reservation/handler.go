@@ -6,6 +6,7 @@ import (
 	"strconv"
 
 	"github.com/gofiber/fiber/v2"
+	"github.com/google/uuid"
 )
 
 type Handler struct {
@@ -34,7 +35,7 @@ func (h *Handler) CreateReservation(c *fiber.Ctx) error {
 }
 
 func (h *Handler) GetReservation(c *fiber.Ctx) error {
-	reservationId, err := strconv.Atoi(c.Params("id"))
+	reservationId, err := uuid.Parse(c.Params("id"))
 	if err != nil {
 		return apperror.NewBadRequestError("invalid reservation id")
 	}
